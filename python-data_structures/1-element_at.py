@@ -5,5 +5,4 @@ def element_at(my_list, idx):
     elif idx >= len(my_list):
         return None
     else:
-        return my_list[idx]sr/bin/python3
-
+        return my_list[idx]
