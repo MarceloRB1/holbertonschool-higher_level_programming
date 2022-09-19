@@ -39,4 +39,3 @@ def roman_to_int(roman_string):
             total = total + symbol1
             x = x + 1
     return total
-
