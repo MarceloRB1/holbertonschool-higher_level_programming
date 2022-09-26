@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 """
-Python excercise 1
+Python excercise 0
 """
+
+
 class Square:
-      """ 
-      Represents an empty square. 
-      """
+    """
+    empty class Square
+    """
     pass
