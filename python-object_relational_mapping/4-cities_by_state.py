@@ -1,24 +1,59 @@
 #!/usr/bin/python3
-""" lists all cities from the database hbtn_0e_4_usa """
-
+"""
+    Module 0-select_states.py
+"""
 import MySQLdb
 import sys
 
-if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Usage: ./<script-name>.py [username] [password] [database]")
-        sys.exit()
 
-    db = MySQLdb.connect(host="localhost", port=3306, user=sys.argv[1],
-                         passwd=sys.argv[2], db=sys.argv[3])
-    cur = db.cursor()
-    cur.execute("SELECT a.id, a.name, b.name "
-                "FROM cities a "
-                "RIGHT JOIN states b "
-                "ON a.state_id = b.id "
-                "ORDER BY id ASC")
-    query_rows = cur.fetchall()
-    for row in query_rows:
-        print(row)
-    cur.close()
-    db.close()
+class DataBase:
+    """ Create the class DataBase to connect with MySQL """
+
+    def __init__(self, user, passwd, bd, port, host):
+        """ The constructor of the class """
+        self.user = user
+        self.passwd = passwd
+        self.bd = bd
+        self.port = port
+        self.host = host
+
+    def DBConection(self):
+        """ Return the conection of the BD"""
+
+        return MySQLdb.connect(
+                                host=self.host,
+                                port=self.port,
+                                user=self.user,
+                                passwd=self.passwd,
+                                db=self.bd
+                              )
+
+    def Cursor(self):
+        """ Return the cursor of the db"""
+
+        return self.DBConection().cursor()
+
+
+if __name__ == '__main__':
+
+    conection_data = sys.argv
+
+    Uname = conection_data[1]
+    Upasswd = conection_data[2]
+    BDname = conection_data[3]
+
+    DataBase_1 = DataBase(Uname, Upasswd, BDname, 3306, "localhost")
+
+    DataBase_1_conection = DataBase_1.DBConection()
+    cursor = DataBase_1.Cursor()
+
+    cursor.execute(
+        """SELECT cities.id, cities.name, states.name FROM cities
+        JOIN states ON cities.state_id = states.id"""
+        )
+
+    states = cursor.fetchall()
+
+    for state in states:
+
+        print(state)
