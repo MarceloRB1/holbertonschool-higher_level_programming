@@ -1,24 +1,57 @@
 #!/usr/bin/python3
-""" takes in an argument and displays all values in the states table of hbtn_0e_0_usa """
-
+"""
+    Module 0-select_states.py
+"""
 import MySQLdb
 import sys
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 5:
-        print("Usage: ./<script-name>.py [username] [password] "
-              "[database] [state]")
-        sys.exit()
+class DataBase:
+    """ Create the class DataBase to connect with MySQL """
 
-    db = MySQLdb.connect(host="localhost", port=3306, user=sys.argv[1],
-                         passwd=sys.argv[2], db=sys.argv[3])
-    cur = db.cursor()
-    cur.execute(f"SELECT * FROM states "
-                "WHERE name='{sys.argv[4]}' "
-                "ORDER BY id ASC")
-    query_rows = cur.fetchall()
-    for row in query_rows:
-        print(row)
-    cur.close()
-    db.close()
+    def __init__(self, user, passwd, bd, port, host):
+        """ The constructor of the class """
+        self.user = user
+        self.passwd = passwd
+        self.bd = bd
+        self.port = port
+        self.host = host
+
+    def DBConection(self):
+        """ Return the conection of the BD"""
+
+        return MySQLdb.connect(
+                                host=self.host,
+                                port=self.port,
+                                user=self.user,
+                                passwd=self.passwd,
+                                db=self.bd
+                              )
+
+    def Cursor(self):
+        """ Return the cursor of the db"""
+
+        return self.DBConection().cursor()
+
+
+if __name__ == '__main__':
+
+    conection_data = sys.argv
+
+    Uname = conection_data[1]
+    Upasswd = conection_data[2]
+    BDname = conection_data[3]
+
+    DataBase_1 = DataBase(Uname, Upasswd, BDname, 3306, "localhost")
+
+    DataBase_1_conection = DataBase_1.DBConection()
+    cursor = DataBase_1.Cursor()
+    consult = "SELECT * from states "
+    consult_2 = "WHERE BINARY name='{}'".format(conection_data[4])
+    cursor.execute(consult + consult_2 + " ORDER BY id ASC")
+
+    states = cursor.fetchall()
+
+    for state in states:
+
+        print(state)
